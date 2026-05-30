@@ -1,0 +1,63 @@
+<!--
+  Splunk classic-viz Formatter
+  ----------------------------
+  Renders the formatting menu in Classic dashboards. Dashboard Studio uses its
+  own Configuration panel keyed off the same property namespace, so the field
+  names here must match those read in visualization_source.js (clockFaceColor,
+  handColor, secondHandColor, tickColor, showDigital, timezone, showDate,
+  showGlow).
+-->
+<div class="splunk-formatter-section" data-section-label="Appearance">
+    <div class="splunk-formatter-property"
+         data-name="clockFaceColor"
+         data-label="Clock face colour"
+         data-type="color"
+         data-default-value="#050810">
+    </div>
+    <div class="splunk-formatter-property"
+         data-name="handColor"
+         data-label="Hand colour (hour/minute)"
+         data-type="color"
+         data-default-value="#6aa3f8">
+    </div>
+    <div class="splunk-formatter-property"
+         data-name="secondHandColor"
+         data-label="Second hand colour"
+         data-type="color"
+         data-default-value="#00d4aa">
+    </div>
+    <div class="splunk-formatter-property"
+         data-name="tickColor"
+         data-label="Tick marks colour"
+         data-type="color"
+         data-default-value="#00d4aa">
+    </div>
+    <div class="splunk-formatter-property"
+         data-name="showGlow"
+         data-label="Show neon glow"
+         data-type="boolean"
+         data-default-value="true">
+    </div>
+</div>
+<div class="splunk-formatter-section" data-section-label="Display">
+    <div class="splunk-formatter-property"
+         data-name="showDigital"
+         data-label="Show digital time"
+         data-type="boolean"
+         data-default-value="true">
+    </div>
+    <div class="splunk-formatter-property"
+         data-name="showDate"
+         data-label="Show date"
+         data-type="boolean"
+         data-default-value="true">
+    </div>
+    <div class="splunk-formatter-property"
+         data-name="timezone"
+         data-label="Timezone"
+         data-type="dropdown"
+         data-default-value="local">
+        <option value="local">Local browser timezone</option>
+        <option value="utc">UTC</option>
+    </div>
+</div>

@@ -1,0 +1,18 @@
+# Node / build artefacts inside the viz folder
+appserver/static/visualizations/realtime_clock/node_modules/
+appserver/static/visualizations/realtime_clock/dist/
+appserver/static/visualizations/realtime_clock/.cache/
+*.log
+
+# Splunk packaging
+*.tgz
+*.tar.gz
+*.spl
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors
+.idea/
+.vscode/
