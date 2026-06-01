@@ -1,12 +1,19 @@
 # viz-realtime-clock
 
-A Splunk custom visualization that renders a **real-time analog clock** with
-an aviation-grade dark aesthetic. Built for the
+A Splunk app shipping **two** Dashboard Studio custom visualizations with an
+aviation-grade dark aesthetic:
+
+- **Realtime Clock** — a real-time **analog** clock.
+- **Digital Clock** — a seven-segment **LCD-style** digital clock.
+
+Built for the
 [AirspaceWatch Splunk Dashboard Contest 2026](https://www.splunk.com/) entry.
 
 ![Realtime Clock screenshot](appserver/static/visualizations/realtime_clock/preview.png)
 
 ## Features
+
+### Realtime Clock (analog)
 
 - Smooth-sweep second hand driven by `requestAnimationFrame` (sub-second
   precision, never out of sync with the wall clock).
@@ -16,6 +23,16 @@ an aviation-grade dark aesthetic. Built for the
 - Optional neon glow on the second hand & centre cap.
 - HiDPI / Retina aware (canvas resized to `devicePixelRatio`).
 - Auto-resizes inside Dashboard Studio grid cells.
+
+### Digital Clock (seven-segment)
+
+- Authentic seven-segment digit rendering with an optional **ghost segment**
+  layer for the classic LCD look.
+- **12 / 24-hour** modes (AM/PM indicator in 12-hour mode).
+- Blinking colon (once per second), toggleable.
+- **local**, **UTC**, or any **IANA** timezone (e.g. `Europe/London`).
+- Optional seconds pair, date line, and phosphor glow.
+- Configurable digit and background colours; HiDPI aware and auto-resizing.
 
 Default palette matches **AirspaceWatch**:
 
@@ -38,7 +55,7 @@ viz-realtime-clock/
 ├── README/
 │   ├── savedsearches.conf.spec
 │   └── visualizations.conf.spec
-├── appserver/static/visualizations/realtime_clock/
+├── appserver/static/visualizations/realtime_clock/   # analog clock
 │   ├── src/
 │   │   └── visualization_source.js     # main viz code
 │   ├── visualization.js                # built output (shim by default)
@@ -46,6 +63,9 @@ viz-realtime-clock/
 │   ├── webpack.config.js
 │   ├── package.json
 │   └── .babelrc
+├── appserver/static/visualizations/digital_clock/    # seven-segment clock
+│   ├── visualization.js                # self-contained studio_visualization
+│   └── config.json                     # options schema / editor config
 └── README.md
 ```
 
