@@ -39,6 +39,23 @@ jobs:
           echo "VERSION_WITH_HASH=${VERSION_WITH_HASH}" >> $GITHUB_OUTPUT
           echo "TAG_VERSION=${TAG_VERSION}" >> $GITHUB_OUTPUT
 
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Build visualizations (where a build script exists)
+        shell: bash
+        run: |
+          for d in appserver/static/visualizations/*/; do
+            if [ -f "${d}package.json" ] && grep -q '"build"' "${d}package.json"; then
+              echo "==> building ${d}"
+              ( cd "$d" && npm ci && npm run build )
+            else
+              echo "==> ${d} has no build script — using committed visualization.js"
+            fi
+          done
+
       - name: Stage app
         shell: bash
         run: |
@@ -56,10 +73,10 @@ jobs:
                 --exclude 'node_modules' \
                 --exclude '*.tar.gz' \
                 --exclude '.DS_Store' \
-                --exclude 'appserver/static/visualizations/realtime_clock/src' \
-                --exclude 'appserver/static/visualizations/realtime_clock/webpack.config.js' \
-                --exclude 'appserver/static/visualizations/realtime_clock/package.json' \
-                --exclude 'appserver/static/visualizations/realtime_clock/package-lock.json' \
+                --exclude 'appserver/static/visualizations/*/src' \
+                --exclude 'appserver/static/visualizations/*/webpack.config.js' \
+                --exclude 'appserver/static/visualizations/*/package.json' \
+                --exclude 'appserver/static/visualizations/*/package-lock.json' \
                 ./ stage/viz-realtime-clock/
           # Normalise permissions — AppInspect rejects 775/664. App dirs 755, files 644.
           find stage/viz-realtime-clock -type d -exec chmod 755 {} +
