@@ -13,7 +13,7 @@
 import RealtimeClock from './RealtimeClock';
 
 const definition = {
-    name: 'realtime_clock',
+    name: 'analog_clock',
     title: 'Realtime Clock',
     description: 'Real-time analog clock with aviation-themed dark aesthetic. Runs at 60 fps via requestAnimationFrame. Built for AirspaceWatch.',
 
