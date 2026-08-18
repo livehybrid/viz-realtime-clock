@@ -13,6 +13,15 @@ updates:
       - "javascript"
 
   # GitHub Actions used by the CI/release workflow
+    ignore:
+      # react/react-dom are webpack externals supplied by Dashboard Studio at
+      # runtime (peer range ^16-^18) — majors beyond Splunk's runtime are
+      # not applicable. The webpack build is a non-shipping PoC anyway.
+      - dependency-name: "react"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "react-dom"
+        update-types: ["version-update:semver-major"]
+
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:

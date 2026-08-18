@@ -201,3 +201,17 @@ Apache 2.0.
 
 - Built for the **AirspaceWatch** entry to the Splunk Dashboard Contest 2026.
 - Scaffold inspired by [rcastley/splunk-custom-visualizations](https://github.com/rcastley/splunk-custom-visualizations).
+
+## Requirements
+
+- Splunk Enterprise 9.4+ / 10.x (or Splunk Cloud) with Dashboard Studio.
+- On Splunk **Enterprise** the Dashboard Studio custom-visualization framework is
+  behind a feature flag. Enable it once (then restart Splunk Web):
+
+  ```
+  # $SPLUNK_HOME/etc/system/local/web-features.conf
+  [feature:dashboard_studio]
+  activate_studio_extension_framework = true
+  ```
+
+  Without it, dashboards show a spinner where the clock should be.
