@@ -21,6 +21,10 @@ updates:
         update-types: ["version-update:semver-major"]
       - dependency-name: "react-dom"
         update-types: ["version-update:semver-major"]
+      # babel 8 breaks the current jest/babel-jest toolchain and the webpack
+      # output is a non-shipping PoC — revisit majors with the React port.
+      - dependency-name: "@babel/*"
+        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: "github-actions"
     directory: "/"
