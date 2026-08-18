@@ -14,6 +14,7 @@ services:
       - "8089:8089"
     volumes:
       - ${APP_DIR:-../stage/viz-realtime-clock}:/opt/splunk/etc/apps/viz-realtime-clock
+      - ./system-local/web-features.conf:/opt/splunk/etc/system/local/web-features.conf
     healthcheck:
       test: ["CMD", "curl", "-sSf", "http://localhost:8000/en-GB/account/login"]
       interval: 10s
