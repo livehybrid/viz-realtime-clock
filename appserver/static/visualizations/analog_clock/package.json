@@ -1,13 +1,13 @@
 {
   "name": "splunk-viz-realtime-clock",
   "version": "1.0.0",
-  "description": "Realtime analog clock \u2014 Splunk Dashboard Studio custom visualization (AirspaceWatch theme)",
+  "description": "Realtime analog clock. NOTE: the packaged visualization.js is the hand-maintained studio_visualization artifact; the React source here is a future-port PoC whose build MUST NOT overwrite it (CI packages the committed artifact).",
   "private": true,
   "scripts": {
-    "build": "webpack --mode production",
     "watch": "webpack --mode development --watch",
     "dev": "webpack --mode development",
-    "test": "jest"
+    "test": "jest",
+    "build:react-poc": "webpack --mode production"
   },
   "author": "Will Searle <will@livehybrid.com>",
   "license": "Apache-2.0",
