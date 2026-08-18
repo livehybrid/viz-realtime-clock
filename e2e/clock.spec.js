@@ -90,13 +90,17 @@ async function findCanvas(page, timeoutMs) {
 }
 
 test('Realtime Clock renders on a Studio dashboard', async ({ page }) => {
+    const consoleAll = [];
     const consoleErrors = [];
     page.on('console', (msg) => {
+        consoleAll.push(`${msg.type()}: ${msg.text()}`.slice(0, 300));
         if (msg.type() === 'error') consoleErrors.push(msg.text());
     });
     page.on('pageerror', (err) => consoleErrors.push(`pageerror: ${err.message}`));
     page.on('response', (r) => {
-        if (r.status() >= 400) console.log(`HTTP ${r.status()} ${r.url()}`);
+        if (r.status() >= 400 || /visualization\.js|analog_clock/.test(r.url())) {
+            console.log(`HTTP ${r.status()} ${r.url()}`);
+        }
     });
 
     // Splunk web form login
@@ -109,7 +113,17 @@ test('Realtime Clock renders on a Studio dashboard', async ({ page }) => {
     // Open the dashboard and wait for the viz to draw (in any frame)
     await page.goto(`/en-GB/app/${APP}/${VIEW}`);
     const found = await findCanvas(page, 120000);
-    expect(found, 'no canvas found in any frame — see logged frame URLs and 4xx responses').not.toBeNull();
+    if (!found) {
+        console.log('--- console messages (last 50) ---');
+        consoleAll.slice(-50).forEach((l) => console.log(l));
+        for (const f of page.frames()) {
+            if (f === page.mainFrame()) continue;
+            console.log(`--- frame content: ${f.url()} ---`);
+            try { console.log((await f.content()).slice(0, 3000)); }
+            catch (e) { console.log('frame content unavailable:', e.message); }
+        }
+    }
+    expect(found, 'no canvas found in any frame — see logged diagnostics').not.toBeNull();
 
     // The digital readout proves the animation loop ran, not just the mount
     await expect(found.frame.getByText(/\d\d:\d\d:\d\d UTC/).first()).toBeVisible({ timeout: 60000 });
