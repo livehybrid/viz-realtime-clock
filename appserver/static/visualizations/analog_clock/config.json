@@ -11,8 +11,16 @@
       "requiredDataSources": [],
       "optionalDataSources": []
     },
-    "size": { "initialWidth": 265, "initialHeight": 300 },
+    "size": {
+      "initialWidth": 265,
+      "initialHeight": 300
+    },
     "optionsSchema": {
+      "clockFaceColor": {
+        "type": "string",
+        "description": "Clock face background colour (hex).",
+        "default": "#050810"
+      },
       "handColor": {
         "type": "string",
         "description": "Hour and minute hand colour (hex).",
@@ -54,23 +62,75 @@
         "label": "Time",
         "open": true,
         "layout": [
-          [{ "editor": "editor.text", "label": "Timezone", "option": "timezone", "editorProps": { "placeholder": "local, utc, Europe/London …" } }]
+          [
+            {
+              "editor": "editor.text",
+              "label": "Timezone",
+              "option": "timezone",
+              "editorProps": {
+                "placeholder": "local, utc, Europe/London …"
+              }
+            }
+          ]
         ]
       },
       {
         "label": "Colours",
         "layout": [
-          [{ "editor": "editor.text", "label": "Hand colour",        "option": "handColor"       }],
-          [{ "editor": "editor.text", "label": "Second hand colour", "option": "secondHandColor" }],
-          [{ "editor": "editor.text", "label": "Tick colour",        "option": "tickColor"       }]
+          [
+            {
+              "editor": "editor.text",
+              "label": "Face colour",
+              "option": "clockFaceColor"
+            }
+          ],
+          [
+            {
+              "editor": "editor.text",
+              "label": "Hand colour",
+              "option": "handColor"
+            }
+          ],
+          [
+            {
+              "editor": "editor.text",
+              "label": "Second hand colour",
+              "option": "secondHandColor"
+            }
+          ],
+          [
+            {
+              "editor": "editor.text",
+              "label": "Tick colour",
+              "option": "tickColor"
+            }
+          ]
         ]
       },
       {
         "label": "Display",
         "layout": [
-          [{ "editor": "editor.checkbox", "label": "Show digital time", "option": "showDigital" }],
-          [{ "editor": "editor.checkbox", "label": "Show date",         "option": "showDate"    }],
-          [{ "editor": "editor.checkbox", "label": "Glow effect",       "option": "showGlow"    }]
+          [
+            {
+              "editor": "editor.checkbox",
+              "label": "Show digital time",
+              "option": "showDigital"
+            }
+          ],
+          [
+            {
+              "editor": "editor.checkbox",
+              "label": "Show date",
+              "option": "showDate"
+            }
+          ],
+          [
+            {
+              "editor": "editor.checkbox",
+              "label": "Glow effect",
+              "option": "showGlow"
+            }
+          ]
         ]
       }
     ]

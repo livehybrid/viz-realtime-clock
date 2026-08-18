@@ -36,7 +36,7 @@ const definition = {
         showDigital:     { type: 'boolean', default: true,      title: 'Show Digital Time' },
         showDate:        { type: 'boolean', default: true,      title: 'Show Date' },
         showGlow:        { type: 'boolean', default: true,      title: 'Glow Effect' },
-        timezone:        { type: 'string',  default: 'utc',     title: 'Timezone', enum: ['local', 'utc'] },
+        timezone:        { type: 'string',  default: 'local',   title: 'Timezone', enum: ['local', 'utc'] },
     },
 
     // Default panel definition — copied into the dashboard JSON when the user
