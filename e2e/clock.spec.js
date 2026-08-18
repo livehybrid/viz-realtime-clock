@@ -73,10 +73,30 @@ test.beforeAll(async () => {
     await api.dispose();
 });
 
+// Studio custom vizzes run in a sandboxed iframe — search every frame.
+async function findCanvas(page, timeoutMs) {
+    const deadline = Date.now() + timeoutMs;
+    while (Date.now() < deadline) {
+        for (const f of page.frames()) {
+            try {
+                const h = await f.$('canvas');
+                if (h) return { frame: f, handle: h };
+            } catch (_) { /* frame may detach mid-poll */ }
+        }
+        await page.waitForTimeout(2000);
+    }
+    console.log('frames at timeout:', page.frames().map((f) => f.url()));
+    return null;
+}
+
 test('Realtime Clock renders on a Studio dashboard', async ({ page }) => {
     const consoleErrors = [];
     page.on('console', (msg) => {
         if (msg.type() === 'error') consoleErrors.push(msg.text());
+    });
+    page.on('pageerror', (err) => consoleErrors.push(`pageerror: ${err.message}`));
+    page.on('response', (r) => {
+        if (r.status() >= 400) console.log(`HTTP ${r.status()} ${r.url()}`);
     });
 
     // Splunk web form login
@@ -86,13 +106,13 @@ test('Realtime Clock renders on a Studio dashboard', async ({ page }) => {
     await page.press('input[name="password"]', 'Enter');
     await page.waitForURL(/\/(app|launcher|home)/, { timeout: 60000 });
 
-    // Open the dashboard and wait for the viz to draw
+    // Open the dashboard and wait for the viz to draw (in any frame)
     await page.goto(`/en-GB/app/${APP}/${VIEW}`);
-    const canvas = page.locator('canvas').first();
-    await expect(canvas).toBeVisible({ timeout: 120000 });
+    const found = await findCanvas(page, 120000);
+    expect(found, 'no canvas found in any frame — see logged frame URLs and 4xx responses').not.toBeNull();
 
     // The digital readout proves the animation loop ran, not just the mount
-    await expect(page.getByText(/\d\d:\d\d:\d\d UTC/).first()).toBeVisible({ timeout: 60000 });
+    await expect(found.frame.getByText(/\d\d:\d\d:\d\d UTC/).first()).toBeVisible({ timeout: 60000 });
 
     // Render proof artifact
     await page.screenshot({ path: 'e2e-results/clock-render.png' });
