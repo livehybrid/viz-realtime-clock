@@ -1,12 +1,13 @@
 {
   "name": "splunk-viz-realtime-clock",
   "version": "1.0.0",
-  "description": "Realtime analog clock — Splunk Dashboard Studio custom visualization (AirspaceWatch theme)",
+  "description": "Realtime analog clock \u2014 Splunk Dashboard Studio custom visualization (AirspaceWatch theme)",
   "private": true,
   "scripts": {
     "build": "webpack --mode production",
     "watch": "webpack --mode development --watch",
-    "dev": "webpack --mode development"
+    "dev": "webpack --mode development",
+    "test": "jest"
   },
   "author": "Will Searle <will@livehybrid.com>",
   "license": "Apache-2.0",
@@ -18,7 +19,14 @@
     "@babel/core": "^7.23.0",
     "@babel/preset-env": "^7.29.7",
     "@babel/preset-react": "^7.29.7",
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "babel-jest": "^30.4.1",
     "babel-loader": "^10.1.1",
+    "jest": "^30.4.2",
+    "jest-canvas-mock": "^2.5.8",
+    "jest-environment-jsdom": "^30.4.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "webpack": "^5.108.4",

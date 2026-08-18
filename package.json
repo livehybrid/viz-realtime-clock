@@ -1,0 +1,11 @@
+{
+  "name": "viz-realtime-clock-dev",
+  "private": true,
+  "description": "Dev tooling for the viz-realtime-clock Splunk app (e2e tests). Not shipped in the app package.",
+  "scripts": {
+    "e2e": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.62.1"
+  }
+}

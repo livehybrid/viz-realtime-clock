@@ -18,3 +18,7 @@ Thumbs.db
 .vscode/
 node_modules/
 **/node_modules/
+
+# test outputs
+e2e-results/
+node_modules/
