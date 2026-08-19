@@ -43,3 +43,22 @@ describe('config.json vs definition consistency', () => {
         }
     });
 });
+
+describe('visualizations.conf Splunkbase safety', () => {
+    const fs = require('fs');
+    const path = require('path');
+    const conf = fs.readFileSync(
+        path.join(__dirname, '..', '..', '..', '..', '..', 'default', 'visualizations.conf'), 'utf8'
+    );
+
+    test('has the main analog_clock stanza', () => {
+        expect(conf).toMatch(/^\[analog_clock\]$/m);
+    });
+
+    test('has NO per-option sub-stanzas (Splunkbase vetting rejects them)', () => {
+        // [viz.option] sub-stanzas work at runtime but fail Splunkbase with
+        // "visualization stanza missing an icon". Options belong in config.json.
+        const subStanzas = [...conf.matchAll(/^\[[^\]]+\.[^\]]+\]/gm)];
+        expect(subStanzas).toEqual([]);
+    });
+});
