@@ -132,10 +132,20 @@ const deg = (h, m, s) => ({
     second: s * 6 - 90,
 });
 
+// The recorder snapshots a frame's rotate() calls at the NEXT clearRect, so
+// the latest snapshot can lag the readout by one frame: poll until a frame
+// with the expected hands is recorded, and fail with the last one seen.
 async function expectHands(clock, want) {
-    const rot = await clock.frame.evaluate(() => window.__clockRec.last);
-    expect(rot, 'three hands rotated per frame').toHaveLength(3);
-    const got = rot.map((r) => (r * 180) / Math.PI);
+    const close = (a, b) => Math.abs(a - b) < 0.05;
+    let got = null;
+    const deadline = Date.now() + 10000;
+    while (Date.now() < deadline) {
+        const rot = await clock.frame.evaluate(() => window.__clockRec.last);
+        got = rot && rot.map((r) => (r * 180) / Math.PI);
+        if (got && got.length === 3 && close(got[0], want.hour) && close(got[1], want.minute) && close(got[2], want.second)) return;
+        await clock.frame.page().waitForTimeout(100);
+    }
+    expect(got, 'three hands rotated per frame').toHaveLength(3);
     expect(got[0]).toBeCloseTo(want.hour, 1);
     expect(got[1]).toBeCloseTo(want.minute, 1);
     expect(got[2]).toBeCloseTo(want.second, 1);
