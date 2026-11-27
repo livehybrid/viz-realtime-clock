@@ -18,9 +18,8 @@
 (function () {
     'use strict';
 
-    var FACE_COLOR = '#050810';
-
     var DEFAULTS = {
+        clockFaceColor:  '#050810',
         handColor:       '#6aa3f8',
         secondHandColor: '#00d4aa',
         tickColor:       '#00d4aa',
@@ -32,6 +31,18 @@
 
     var MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
     var DAYS   = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
+
+    /* Options arrive as untyped dashboard JSON. Wrong types fall back to the
+     * default instead of throwing every frame (a numeric timezone or colour
+     * used to call .trim()/.replace() on a number and stop the clock dead). */
+    function str(v, dflt) {
+        return (typeof v === 'string' && v.trim() !== '') ? v.trim() : dflt;
+    }
+    function bool(v, dflt) {
+        if (v === true || v === 'true') return true;
+        if (v === false || v === 'false') return false;
+        return dflt;
+    }
 
     function pad(n) { return n < 10 ? '0' + n : '' + n; }
 
@@ -53,7 +64,7 @@
      */
     function getTimeComponents(tz) {
         var now = new Date();
-        var t   = (tz || 'local').trim();
+        var t   = str(tz, 'local');
 
         if (t === 'local') {
             return {
@@ -63,7 +74,7 @@
                 dow: now.getDay(), label: '',
             };
         }
-        if (t === 'utc' || t === 'UTC') {
+        if (t.toLowerCase() === 'utc') {
             return {
                 h: now.getUTCHours(), m: now.getUTCMinutes(), s: now.getUTCSeconds(),
                 ms: now.getUTCMilliseconds(),
@@ -152,18 +163,20 @@
             var raw = state.options || {};
             var o   = raw.options || raw;
             return {
-                handColor:       o.handColor       || DEFAULTS.handColor,
-                secondHandColor: o.secondHandColor || DEFAULTS.secondHandColor,
-                tickColor:       o.tickColor       || DEFAULTS.tickColor,
-                showDigital:     o.showDigital     !== undefined ? !!o.showDigital  : DEFAULTS.showDigital,
-                showDate:        o.showDate        !== undefined ? !!o.showDate     : DEFAULTS.showDate,
-                showGlow:        o.showGlow        !== undefined ? !!o.showGlow     : DEFAULTS.showGlow,
-                timezone:        o.timezone        || DEFAULTS.timezone,
+                clockFaceColor:  str(o.clockFaceColor,  DEFAULTS.clockFaceColor),
+                handColor:       str(o.handColor,       DEFAULTS.handColor),
+                secondHandColor: str(o.secondHandColor, DEFAULTS.secondHandColor),
+                tickColor:       str(o.tickColor,       DEFAULTS.tickColor),
+                showDigital:     bool(o.showDigital, DEFAULTS.showDigital),
+                showDate:        bool(o.showDate,    DEFAULTS.showDate),
+                showGlow:        bool(o.showGlow,    DEFAULTS.showGlow),
+                timezone:        str(o.timezone,     DEFAULTS.timezone),
             };
         }
 
         function tick() {
             var cfg = resolveOpts();
+            var FACE_COLOR = cfg.clockFaceColor;
             root.style.background = FACE_COLOR;
 
             var infoH = (cfg.showDigital || cfg.showDate) ? 44 : 0;

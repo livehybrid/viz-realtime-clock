@@ -150,24 +150,18 @@ Clock**) reference the viz by its fully-qualified ID:
 }
 ```
 
-The search is intentionally trivial — the viz drives its own animation off
-`Date.now()`. The `_time` returned by Splunk is only used to compute a
-clock-skew offset (so a wildly wrong client clock won't lie to the viewer).
+The search is optional and intentionally trivial: the shipped viz draws from
+the browser clock (`Date.now()`) and does not read the search result.
 
-## Classic SimpleXML usage
+## Classic SimpleXML
 
-```xml
-<viz type="viz-realtime-clock.realtime_clock">
-    <search>
-        <query>| makeresults | eval _time=now() | table _time</query>
-        <refresh>60s</refresh>
-    </search>
-    <option name="viz-realtime-clock.realtime_clock.timezone">utc</option>
-    <option name="viz-realtime-clock.realtime_clock.showDate">true</option>
-</viz>
-```
+Not supported. The viz is registered as `framework_type = studio_visualization`,
+which only Dashboard Studio loads.
 
 ## Formatting properties
+
+Options with the wrong type (for example `showDigital: "false"` as a string, or
+a number as a colour or timezone) fall back to their defaults.
 
 See [`README/visualizations.conf.spec`](README/visualizations.conf.spec) for
 the authoritative list. Quick reference:
@@ -181,7 +175,7 @@ the authoritative list. Quick reference:
 | `showDigital`     | boolean   | `true`      | Show `HH:MM:SS` under the dial     |
 | `showDate`        | boolean   | `true`      | Show `WED 21 May 2026`             |
 | `showGlow`        | boolean   | `true`      | Neon glow on the second hand       |
-| `timezone`        | dropdown  | `local`     | `local` or `utc`                   |
+| `timezone`        | string    | `local`     | `local`, `utc` or an IANA zone     |
 
 ## Development tips
 
