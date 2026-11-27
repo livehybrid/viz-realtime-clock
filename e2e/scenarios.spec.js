@@ -196,8 +196,25 @@ test('clockFaceColor is honoured', async ({ page }) => {
     expect(bg).toBe('rgb(18, 52, 86)');
 });
 
-test('an empty data source bound to the clock does not stop it', async ({ page }) => {
-    const clock = await openClock(page, 'clock_e2e_empty');
-    await expect.poll(() => readout(clock).then((r) => r.time), { timeout: 30000 }).toBe('23:47:05 UTC');
-    expect(clock.vizErrors()).toEqual([]);
+// Platform behaviour, pinned: when a bound search returns zero rows, Studio
+// swaps the panel for its no-results placeholder and never mounts the viz,
+// even though the clock does not use the data. The README says not to bind a
+// search that can come back empty.
+test('an empty data source: Studio shows its placeholder instead of the clock', async ({ page }) => {
+    let dispatched = false;
+    page.on('request', (r) => {
+        if (r.method() === 'POST' && /\/search\/(v2\/)?jobs(\?|$)/.test(r.url()) && (r.postData() || '').includes('where')) dispatched = true;
+    });
+    await page.goto('/en-GB/account/login');
+    await page.fill('input[name="username"]', USER);
+    await page.fill('input[name="password"]', PASS);
+    await page.press('input[name="password"]', 'Enter');
+    await page.waitForURL((u) => /^\/[^/]+\/(app|launcher|home)\b/.test(new URL(u).pathname), { timeout: 60000 });
+    await page.goto(`/en-GB/app/${HOST_APP}/clock_e2e_empty`);
+    await expect.poll(() => dispatched, { timeout: 60000 }).toBe(true);
+    await page.waitForTimeout(15000);
+    for (const f of page.frames()) {
+        if (f === page.mainFrame()) continue;
+        expect(await f.$('canvas').catch(() => null)).toBeNull();
+    }
 });

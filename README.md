@@ -151,7 +151,10 @@ Clock**) reference the viz by its fully-qualified ID:
 ```
 
 The search is optional and intentionally trivial: the shipped viz draws from
-the browser clock (`Date.now()`) and does not read the search result.
+the browser clock (`Date.now()`) and does not read the search result. If you
+do bind one, make sure it always returns a row: when a bound search returns
+zero rows, Dashboard Studio shows its own no-results placeholder instead of the
+clock.
 
 ## Classic SimpleXML
 
